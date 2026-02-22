@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Food Donation System</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
+</head>
+<body>
+
+    <div class="container">
+        <!-- WELCOME SCREEN -->
+        <div id="welcome-screen">
+            <h1>🍽️ Welcome to Food Share</h1>
+            <p>Connect surplus food with those who need it</p>
+            <div class="btn-group">
+                <button class="btn-primary" onclick="showLogin()">Login</button>
+                <button class="btn-secondary" onclick="showSignup()">Sign Up</button>
+            </div>
+        </div>
+
+        <!-- LOGIN FORM -->
+        <div id="login-form" class="form-box hidden">
+            <h2>Login</h2>
+            <input type="text" id="login-name" placeholder="Enter your name">
+            <input type="password" id="login-pass" placeholder="Enter your password">
+            <button class="btn-primary" onclick="login()">Login</button>
+            <button class="btn-text" onclick="showWelcome()">Back to Home</button>
+            <p id="login-error" class="error"></p>
+        </div>
+
+        <!-- SIGNUP FORM -->
+        <div id="signup-form" class="form-box hidden">
+            <h2>Create Account</h2>
+            
+            <label>Select Role:</label>
+            <select id="su-role" onchange="updateSignupFields()">
+                <option value="">-- Select Role --</option>
+                <option value="provider">Restaurant / Donor / Event Organiser</option>
+                <option value="receiver">NGO Member / Volunteer</option>
+            </select>
+
+            <input type="text" id="su-name" placeholder="Full Name">
+            <input type="password" id="su-pass" placeholder="Password (min 6 characters)">
+            
+            <!-- Category for Provider -->
+            <select id="su-provider-category" class="category-select hidden">
+                <option value="">-- Select Category --</option>
+                <option value="Restaurant">Restaurant</option>
+                <option value="Donor">Donor</option>
+                <option value="Event Organiser">Event Organiser</option>
+            </select>
+
+            <!-- Category for Receiver -->
+            <select id="su-receiver-category" class="category-select hidden">
+                <option value="">-- Select Category --</option>
+                <option value="NGO Member">NGO Member</option>
+                <option value="Volunteer">Volunteer</option>
+            </select>
+
+            <input type="text" id="su-mobile" placeholder="Mobile Number">
+            <input type="text" id="su-location" placeholder="Location (City/Area)">
+            
+            <button class="btn-primary" onclick="signup()">Sign Up</button>
+                        <button class="btn-text" onclick="showWelcome()">Back to Home</button>
+            <p id="signup-error" class="error"></p>
+        </div>
+
+        <!-- PROVIDER DASHBOARD -->
+        <div id="provider-dashboard" class="dashboard hidden">
+            <div class="dashboard-header">
+                <h2>🏪 Provider Dashboard</h2>
+                <button class="btn-small" onclick="logout()">Logout</button>
+            </div>
+            
+            <!-- Post Food Form -->
+            <div class="card">
+                <h3>📝 Post Available Food</h3>
+                <input type="text" id="food-name" placeholder="Food Name (e.g., Veg Biryani)">
+                <input type="number" id="food-qty" placeholder="Quantity (Persons it serves)">
+                <label>Cooked Time (IST):</label>
+                <input type="datetime-local" id="food-cooked">
+                <label>Fresh Until (IST):</label>
+                <input type="datetime-local" id="food-fresh">
+                <button class="btn-primary" onclick="postFood()">Post Food</button>
+            </div>
+
+            <!-- My Posted Food -->
+            <div class="card">
+                <h3>📋 My Posted Food</h3>
+                <div id="my-food-list"></div>
+            </div>
+
+            <!-- Notifications -->
+            <div class="card">
+                <h3>🔔 Notifications <span id="notif-count" class="badge">0</span></h3>
+                <div id="provider-notifications"></div>
+            </div>
+
+            <!-- Export Data -->
+            <button class="btn-secondary" onclick="exportData()">📊 Download Excel Report</button>
+        </div>
+
+        <!-- RECEIVER DASHBOARD (NGO/Volunteer) -->
+        <div id="receiver-dashboard" class="dashboard hidden">
+            <div class="dashboard-header">
+                <h2>🤝 Receiver Dashboard</h2>
+                <div>
+                    <button class="btn-small" onclick="showVolunteerHistory()">📜 My History</button>
+                    <button class="btn-small" onclick="logout()">Logout</button>
+                </div>
+            </div>
+
+            <!-- Map -->
+            <div class="card">
+                <h3>🗺️ Food Locations Near You</h3>
+                <div id="map" style="height: 250px; width: 100%; border-radius: 8px;"></div>
+            </div>
+
+            <!-- Available Food List (Priority Sorted) -->
+            <div class="card">
+                <h3>🍽️ Available Food (Priority: Freshness)</h3>
+                <p class="info-text">Foods with less remaining freshness time are shown first</p>
+                <div id="available-food-list"></div>
+            </div>
+
+            <!-- Notifications -->
+            <div class="card">
+                <h3>🔔 Notifications <span id="receiver-notif-count" class="badge">0</span></h3>
+                <div id="receiver-notifications"></div>
+            </div>
+        </div>
+
+        <!-- VOLUNTEER HISTORY -->
+        <div id="volunteer-history" class="dashboard hidden">
+            <div class="dashboard-header">
+                <h2>📜 My Order History</h2>
+                <button class="btn-small" onclick="goBack()">Back</button>
+            </div>
+            <div class="card">
+                <div id="history-list"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
